@@ -14,7 +14,6 @@ public class Shema {
     }
 
     public Shema() {
-
     }
 
     public String getCardFromNumber() {

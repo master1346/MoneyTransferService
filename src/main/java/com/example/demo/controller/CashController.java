@@ -1,12 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.operation.ConfirmOperation;
 import com.example.demo.operation.MergeShemaAmount;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.springframework.http.HttpStatus;
+import com.example.demo.service.CashService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,26 +15,22 @@ import java.io.IOException;
 
 @RestController
 public class CashController {
+    private CashService cashService;
+
+    public CashController(CashService cashService){
+        this.cashService = cashService;
+    }
 
     @PostMapping(path = "/transfer", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> hello1(@RequestBody String requestJSON) throws IOException, ParseException {
-        String responseRequest = " ";
-        JSONParser parser = new JSONParser();
-    JSONObject jsonObject = (JSONObject) parser.parse(requestJSON);
-
-    JSONArray shemaArray = (JSONArray) jsonObject.get("shema");
-
-
-    responseRequest = shemaArray.toString();
-
-
-       return new ResponseEntity("Success " + responseRequest , HttpStatus.OK);
+    public ResponseEntity<String> transferCardToCard(@RequestBody MergeShemaAmount requestJSON ) throws IOException {
+        return cashService.transferCardToCard(requestJSON);
     }
 
-    @GetMapping("/confirmOperation")
-    public void confirmOperation(){
-
+    @PostMapping(path = "/confirmOperation",consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> confirmOperation(@RequestBody ConfirmOperation confirmOperation){
+        return cashService.confirmOperation(confirmOperation);
     }
 
     @GetMapping("/test")
