@@ -1,20 +1,21 @@
 package com.example.demo.operation;
 
-public class Shema {
+public class MergeShemaAmountNew {
     private String cardFromNumber;
     private String cardFromValidTill;
     private String cardFromCVV;
     private String cardToNumber;
+    private Amount amount;
 
-    public Shema(String cardFromNumber, String cardFromValidTill, String cardFromCVV, String cardToNumber) {
+    public MergeShemaAmountNew(String cardFromNumber, String cardFromValidTill, String cardFromCVV, String cardToNumber, Amount amount) {
         this.cardFromNumber = cardFromNumber;
         this.cardFromValidTill = cardFromValidTill;
         this.cardFromCVV = cardFromCVV;
         this.cardToNumber = cardToNumber;
+        this.amount = amount;
     }
 
-    public Shema() {
-    }
+    public MergeShemaAmountNew(){}
 
     public String getCardFromNumber() {
         return cardFromNumber;
@@ -48,13 +49,22 @@ public class Shema {
         this.cardToNumber = cardToNumber;
     }
 
+    public Amount getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Amount amount) {
+        this.amount = amount;
+    }
+
     @Override
     public String toString() {
-        return "Shema{" +
+        return "MergeShemaAmountNew{" +
                 "cardFromNumber='" + cardFromNumber + '\'' +
                 ", cardFromValidTill='" + cardFromValidTill + '\'' +
                 ", cardFromCVV='" + cardFromCVV + '\'' +
                 ", cardToNumber='" + cardToNumber + '\'' +
+                ", amount=" + amount +
                 '}';
     }
 }

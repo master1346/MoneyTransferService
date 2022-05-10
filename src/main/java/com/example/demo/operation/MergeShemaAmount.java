@@ -1,20 +1,20 @@
 package com.example.demo.operation;
 
 public class MergeShemaAmount {
-    private Shema shema;
+    private Properties properties;
     private Amount amount;
 
-    public MergeShemaAmount(Shema shema, Amount amount){
-        this.shema = shema;
+    public MergeShemaAmount(Properties properties, Amount amount){
+        this.properties = properties;
         this.amount = amount;
     }
 
-    public Shema getShema() {
-        return shema;
+    public Properties getProperties() {
+        return properties;
     }
 
-    public void setShema(Shema shema) {
-        this.shema = shema;
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
     public Amount getAmount() {
@@ -28,7 +28,7 @@ public class MergeShemaAmount {
     @Override
     public String toString() {
         return "MergeShemaAmount{" +
-                "shema=" + shema +
+                "Properties=" + properties +
                 ", amount=" + amount +
                 '}';
     }

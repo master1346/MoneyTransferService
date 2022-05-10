@@ -1,15 +1,15 @@
-POST http://localhost:5501/transfer
+POST http://localhost:5501/card-transfer
 Content-Type:  application/json
 
 {
-  "shema": {
-    "cardFromNumber": "1111111111111112",
+  "properties": {
+    "cardFromNumber": "1111111111111111",
     "cardFromValidTill": "1224",
     "cardFromCVV": "111",
-    "cardToNumber": "2222222222222221"
+    "cardToNumber": "2222222222222222"
   },
   "amount": {
-    "value": "5000",
+    "value": "500",
     "currency": "aaaaa"
   }
 }

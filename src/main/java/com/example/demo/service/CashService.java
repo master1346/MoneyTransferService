@@ -1,10 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.operation.Amount;
-import com.example.demo.operation.ConfirmOperation;
-import com.example.demo.operation.MergeShemaAmount;
-import com.example.demo.operation.Shema;
+import com.example.demo.operation.*;
 import com.example.demo.repository.CashRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,49 +15,49 @@ import java.util.Date;
 @Service
 public class CashService {
 
-    private final File logFile = new File("log","logFile.log");
-    private final File dir = new File("log");
+    private final File logFile;
     private final CashRepository cashRepository;
 
-    public CashService(CashRepository cashRepository) throws IOException {
-       this.cashRepository = cashRepository;
+    @Autowired
+    public CashService() {
+       this.logFile =  new File("log","logFile.log");
+       this.cashRepository = new CashRepository();
     }
 
-    public ResponseEntity<String> transferCardToCard(MergeShemaAmount requestJSON) throws IOException {
-        int statusFind = 2;
-        int statusTransfer = 2;
-        ResponseEntity<String> responseEntity = new ResponseEntity<>("Success",HttpStatus.OK);
-        Shema shema = requestJSON.getShema();
+    public ResponseEntity<String> transferCardToCard(MergeShemaAmountNew requestJSON) throws IOException {
+        Properties properties = new Properties(requestJSON.getCardFromNumber(), requestJSON.getCardFromValidTill(), requestJSON.getCardFromCVV(), requestJSON.getCardToNumber());
         Amount amount = requestJSON.getAmount();
 
-        statusFind = cashRepository.findCard(shema);
-        if(statusFind == 2) responseEntity = new ResponseEntity<>("Error input data",HttpStatus.BAD_REQUEST);
-        if(statusFind == 0){ responseEntity = new ResponseEntity<>("Error transfer",HttpStatus.INTERNAL_SERVER_ERROR);}
-
-        statusTransfer = cashRepository.transferCard(shema, amount);
-        if(statusFind == 1 && statusTransfer == 2) responseEntity = new ResponseEntity<>("Error input data",HttpStatus.BAD_REQUEST);
-        //Good request
-        if(statusFind == 1 && statusTransfer == 1) responseEntity = new ResponseEntity<>("Success",HttpStatus.OK);
+        ResponseEntity<String> responseEntity = statusMessage(cashRepository.findCard(properties), cashRepository.transferCard(properties, amount));
         printLog(requestJSON, responseEntity);
 
-       return responseEntity;
+        return responseEntity;
     }
 
-    public void printLog(MergeShemaAmount requestJSON,ResponseEntity response) throws IOException {
+    public void printLog(MergeShemaAmountNew requestJSON, ResponseEntity<String> response) throws IOException{
         Date date = new Date();
-        FileWriter fileWriter = new FileWriter(logFile,true);
-        fileWriter.append(date.toString() + requestJSON.getShema().getCardFromNumber() +
-                requestJSON.getShema().getCardToNumber() +
+        FileWriter fileWriter = new FileWriter(this.logFile,true);
+        fileWriter.append(date + requestJSON.getCardFromNumber() +
+                requestJSON.getCardToNumber() +
                 requestJSON.getAmount().getValue() + response.toString() + "\n");
         fileWriter.close();
     }
 
     public ResponseEntity<String> confirmOperation(ConfirmOperation confirmOperation) {
-        ResponseEntity<String> responseEntity = new ResponseEntity<>("Succeess", HttpStatus.OK);
-        if(confirmOperation.getCodeAuth().equals("0000")) responseEntity = new ResponseEntity<>("Success confirmation", HttpStatus.OK);
-        if(confirmOperation.getCodeAuth().equals("0000")) responseEntity = new ResponseEntity<>("Error input data", HttpStatus.BAD_REQUEST );
-        if(confirmOperation.getCodeAuth().equals("0000")) responseEntity = new ResponseEntity<>("Error confirmation", HttpStatus.INTERNAL_SERVER_ERROR);
+        if(confirmOperation.getCode().equals("0000")) {
+            return new ResponseEntity<>("Success confirmation", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>( "Error code", HttpStatus.BAD_REQUEST);
+        }
+    }
 
-        return responseEntity;
+    public ResponseEntity<String> statusMessage(int statusFind, int statusTransfer){
+        if(statusFind == 2) return new ResponseEntity<>("Error input data",HttpStatus.BAD_REQUEST);
+        if(statusFind == 0) return new ResponseEntity<>("Error transfer",HttpStatus.INTERNAL_SERVER_ERROR);
+        if(statusFind == 1 && statusTransfer == 2) new ResponseEntity<>("Error input data",HttpStatus.BAD_REQUEST);
+        //Good request
+        if(statusFind == 1 && statusTransfer == 1) new ResponseEntity<>("Success",HttpStatus.OK);
+
+        return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 }

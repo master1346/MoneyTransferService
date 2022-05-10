@@ -1,30 +1,19 @@
 package com.example.demo.operation;
 
 public class ConfirmOperation {
-    private String operationID;
-    private String codeAuth;
+    private String code;
 
     public ConfirmOperation(){}
-    public ConfirmOperation(String operationID, String codeAuth){
-        this.operationID = operationID;
-        this.codeAuth = codeAuth;
+
+    public ConfirmOperation( String code){
+        this.code = code;
     }
 
-    public String getOperationID() {
-        return operationID;
+    public String getCode() {
+        return code;
     }
 
-    public void setOperationID(String operationID) {
-        this.operationID = operationID;
+    public void setCode(String code) {
+        this.code = code;
     }
-
-    public String getCodeAuth() {
-        return codeAuth;
-    }
-
-    public void setCodeAuth(String codeAuth) {
-        this.codeAuth = codeAuth;
-    }
-
-
 }

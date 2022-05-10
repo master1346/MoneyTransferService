@@ -1,29 +1,28 @@
 package com.example.demo.controller;
 
 import com.example.demo.operation.ConfirmOperation;
-import com.example.demo.operation.MergeShemaAmount;
+import com.example.demo.operation.MergeShemaAmountNew;
 import com.example.demo.service.CashService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-
+@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 @RestController
 public class CashController {
-    private CashService cashService;
+    private final CashService cashService;
 
-    public CashController(CashService cashService){
+    @Autowired
+    public CashController(CashService cashService) {
         this.cashService = cashService;
     }
 
     @PostMapping(path = "/transfer", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> transferCardToCard(@RequestBody MergeShemaAmount requestJSON ) throws IOException {
+    public ResponseEntity<String> transferCardToCard(@RequestBody MergeShemaAmountNew requestJSON ) throws IOException {
         return cashService.transferCardToCard(requestJSON);
     }
 
@@ -34,7 +33,7 @@ public class CashController {
     }
 
     @GetMapping("/test")
-    public String hello(){
-        return "Hello";
+    public ResponseEntity<String> hello(){
+        return new ResponseEntity<>("OK run test", HttpStatus.OK);
     }
 }
